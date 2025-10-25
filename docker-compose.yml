@@ -2,16 +2,13 @@ version: '3.8'
 
 services:
   ersatztv:
-    image: ersatztv/ersatztv:latest
+    image: ghcr.io/ersatztv/ersatztv:latest
     container_name: ersatztv-music-tv
     restart: unless-stopped
     ports:
       - "8409:8409"  # ErsatzTV Web UI
     environment:
-      - ERSATZTV_DATABASE_PATH=/config/ersatztv.db
-      - ERSATZTV_FFMPEG_PATH=/usr/bin/ffmpeg
-      - ERSATZTV_FFPROBE_PATH=/usr/bin/ffprobe
-      - ERSATZTV_LOG_LEVEL=info
+      - TZ=UTC
     volumes:
       - ./ersatztv-config:/config
       - ./videos:/media/music-videos:ro
