@@ -1,0 +1,36 @@
+# Music TV Station - Coolify Deployment
+
+# Configuration files (will be created automatically)
+ersatztv-config/
+plex-config/
+plex-transcode/
+ersatztv-output/
+
+# Video files (uncomment if you want to ignore them)
+# *.mp4
+# *.mkv
+# *.avi
+# *.mov
+# *.wmv
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Backup files
+*.bak
+*.backup
+
+# Logs
+*.log

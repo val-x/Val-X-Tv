@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  ersatztv:
+    image: jasonraimondi/ersatztv:latest
+    container_name: ersatztv-music-tv
+    restart: unless-stopped
+    ports:
+      - "8409:8409"  # ErsatzTV Web UI
+    environment:
+      - ERSATZTV_DATABASE_PATH=/config/ersatztv.db
+      - ERSATZTV_FFMPEG_PATH=/usr/bin/ffmpeg
+      - ERSATZTV_FFPROBE_PATH=/usr/bin/ffprobe
+      - ERSATZTV_LOG_LEVEL=info
+    volumes:
+      - ./ersatztv-config:/config
+      - ./videos:/media/music-videos:ro
+      - ./ersatztv-output:/output
+    networks:
+      - music-tv-network
+
+  plex:
+    image: plexinc/pms-docker:latest
+    container_name: plex-music-tv
+    restart: unless-stopped
+    ports:
+      - "32400:32400/tcp"  # Plex Web UI
+      - "32400:32400/udp"  # Plex Discovery
+    environment:
+      - PLEX_CLAIM=${PLEX_CLAIM:-}  # Set in Coolify environment variables
+      - PLEX_UID=1000
+      - PLEX_GID=1000
+      - TZ=UTC
+    volumes:
+      - ./plex-config:/config
+      - ./videos:/data/music-videos
+      - ./ersatztv-output:/data/live-tv:ro
+      - ./plex-transcode:/transcode
+    depends_on:
+      - ersatztv
+    networks:
+      - music-tv-network
+
+networks:
+  music-tv-network:
+    driver: bridge
