@@ -41,6 +41,7 @@ services:
       - PGID=1000
       - TZ=UTC
       - VERSION=docker
+      - UMASK=022
     volumes:
       - ./plex-config:/config
       - ./videos:/data/music-videos
@@ -51,6 +52,12 @@ services:
       - ersatztv
     networks:
       - val-x-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:32400/web"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
 networks:
   val-x-network:
