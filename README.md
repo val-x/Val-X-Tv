@@ -1,6 +1,32 @@
-# Music TV Station - Coolify Deployment
+# Val-X Dual Station - TV + FM
 
-Simple Plex + ErsatzTV setup for Coolify server deployment.
+Professional music streaming solution with both **Val-X TV** (music videos) and **Val-X FM** (audio radio) using Plex + ErsatzTV.
+
+## 🎯 What You Get
+
+### 📺 Val-X TV (Music Videos)
+- **URL:** `http://your-domain:8409`
+- Professional TV channel creation
+- Advanced scheduling
+- Commercial break support
+- EPG generation
+- Multiple quality streams
+
+### 📻 Val-X FM (Audio Radio)
+- **URL:** `http://your-domain:8410`
+- Professional radio station
+- Audio streaming
+- Playlist management
+- DJ-style broadcasting
+- Multiple audio channels
+
+### 📱 Plex Media Server
+- **URL:** `http://your-domain:32400/web`
+- Professional media management
+- User accounts and sharing
+- Mobile apps support
+- Live TV integration
+- Supports both TV and FM content
 
 ## 🚀 Quick Deploy to Coolify
 
@@ -36,15 +62,22 @@ PLEX_CLAIM=your-plex-claim-token
 ## 📁 Project Structure
 
 ```
-music-tv-station/
-├── docker-compose-coolify.yml  # Main deployment file
-├── setup-coolify.sh           # Setup script
-├── videos/                    # Your music videos
-│   └── README.md             # Instructions
-├── ersatztv-config/          # ErsatzTV configuration
-├── plex-config/              # Plex configuration
-├── plex-transcode/           # Plex transcoding cache
-└── ersatztv-output/          # ErsatzTV output
+val-x-dual-station/
+├── docker-compose.yml      # Main deployment file
+├── setup.sh               # Setup script
+├── README.md              # Main documentation
+├── DEPLOY.md              # Quick deployment guide
+├── .gitignore             # Git ignore rules
+├── videos/                # Val-X TV music videos
+│   └── README.md         # TV instructions
+├── audio/                 # Val-X FM audio files
+│   └── README.md         # FM instructions
+├── ersatztv-tv-config/    # Val-X TV configuration
+├── ersatztv-fm-config/    # Val-X FM configuration
+├── ersatztv-tv-output/    # Val-X TV output
+├── ersatztv-fm-output/    # Val-X FM output
+├── plex-config/          # Plex configuration
+└── plex-transcode/       # Plex transcoding cache
 ```
 
 ## 🎵 What You Get

@@ -1,17 +1,11 @@
-# Add Your Music Videos Here
+# Val-X TV - Music Videos
 
-Place your music video files in this directory.
+Place your music video files in this directory for Val-X TV.
 
-Supported formats:
-- .mp4
-- .mkv
-- .avi
-- .mov
-- .wmv
+Supported formats: .mp4, .mkv, .avi, .mov, .wmv
 
 Example:
 ```bash
-# Copy your music videos
 cp /path/to/your/videos/*.mp4 ./videos/
 ```
 

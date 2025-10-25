@@ -1,24 +1,42 @@
 version: '3.8'
 
 services:
-  ersatztv:
+  # Val-X TV - Music Video Station
+  ersatztv-tv:
     image: ghcr.io/ersatztv/ersatztv:latest
-    container_name: ersatztv-music-tv
+    container_name: val-x-tv
     restart: unless-stopped
     ports:
-      - "8409:8409"  # ErsatzTV Web UI
+      - "8409:8409"  # Val-X TV Web UI
     environment:
       - TZ=UTC
     volumes:
-      - ./ersatztv-config:/config
+      - ./ersatztv-tv-config:/config
       - ./videos:/media/music-videos:ro
-      - ./ersatztv-output:/output
+      - ./ersatztv-tv-output:/output
     networks:
-      - music-tv-network
+      - val-x-network
 
+  # Val-X FM - Audio Radio Station
+  ersatztv-fm:
+    image: ghcr.io/ersatztv/ersatztv:latest
+    container_name: val-x-fm
+    restart: unless-stopped
+    ports:
+      - "8410:8409"  # Val-X FM Web UI (different port)
+    environment:
+      - TZ=UTC
+    volumes:
+      - ./ersatztv-fm-config:/config
+      - ./audio:/media/music-audio:ro
+      - ./ersatztv-fm-output:/output
+    networks:
+      - val-x-network
+
+  # Plex Media Server (supports both TV and FM)
   plex:
     image: plexinc/pms-docker:latest
-    container_name: plex-music-tv
+    container_name: plex-val-x
     restart: unless-stopped
     ports:
       - "32400:32400/tcp"  # Plex Web UI
@@ -31,13 +49,16 @@ services:
     volumes:
       - ./plex-config:/config
       - ./videos:/data/music-videos
-      - ./ersatztv-output:/data/live-tv:ro
+      - ./audio:/data/music-audio
+      - ./ersatztv-tv-output:/data/live-tv:ro
+      - ./ersatztv-fm-output:/data/live-fm:ro
       - ./plex-transcode:/transcode
     depends_on:
-      - ersatztv
+      - ersatztv-tv
+      - ersatztv-fm
     networks:
-      - music-tv-network
+      - val-x-network
 
 networks:
-  music-tv-network:
+  val-x-network:
     driver: bridge
