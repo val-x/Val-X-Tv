@@ -9,8 +9,9 @@ echo "====================================================="
 # Create necessary directories
 mkdir -p ersatztv-config
 mkdir -p ersatztv-output
-mkdir -p plex-config
-mkdir -p plex-transcode
+mkdir -p jellyfin-config
+mkdir -p jellyfin-cache
+mkdir -p jellyfin-transcode
 mkdir -p videos
 mkdir -p audio
 
@@ -50,17 +51,18 @@ echo ""
 echo "📺📻 Val-X Station (TV + FM):"
 echo "  - Add videos to: ./videos/"
 echo "  - Add audio to: ./audio/"
-echo "  - Access at: https://station.val-x.com/ersatztv"
+echo "  - Access at: https://ersatztv.val-x.com"
 echo "  - Single ErsatzTV instance manages both TV and FM channels"
 echo ""
-echo "📱 Plex Media Server:"
-echo "  - Access at: https://station.val-x.com/plex"
-echo "  - LinuxServer image for better compatibility"
+echo "📱 Jellyfin Media Server:"
+echo "  - Access at: https://jellyfin.val-x.com"
+echo "  - Open-source alternative to Plex"
+echo "  - No licensing restrictions"
 echo "  - Supports both TV and FM content"
 echo ""
 echo "Next steps:"
 echo "1. Add your music videos to ./videos/"
 echo "2. Add your audio files to ./audio/"
 echo "3. Deploy to Coolify"
-echo "4. Set PLEX_CLAIM environment variable in Coolify"
-echo "5. Configure Val-X TV and Val-X FM channels"
+echo "4. Configure Val-X TV and Val-X FM channels"
+echo "5. Set up Jellyfin media libraries"

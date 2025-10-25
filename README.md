@@ -1,25 +1,24 @@
 # Val-X Dual Station - TV + FM
 
-Professional music streaming solution with both **Val-X TV** (music videos) and **Val-X FM** (audio radio) using Plex + ErsatzTV.
+Professional music streaming solution with both **Val-X TV** (music videos) and **Val-X FM** (audio radio) using Jellyfin + ErsatzTV.
 
 ## 🎯 What You Get
 
 ### 📺📻 Val-X Station (TV + FM)
-- **URL:** `https://station.val-x.com/ersatztv`
+- **URL:** `https://ersatztv.val-x.com`
 - **Single ErsatzTV instance** manages both TV and FM channels
 - **TV Channels:** Music videos with professional scheduling
 - **FM Channels:** Audio radio with playlist management
 - **Resource Optimized:** Reduced server load with unified instance
 - **Advanced Features:** EPG generation, commercial breaks, multiple quality streams
 
-### 📱 Plex Media Server
-- **URL:** `https://station.val-x.com/plex`
-- **LinuxServer Image:** Better compatibility and performance
-- Professional media management
-- User accounts and sharing
-- Mobile apps support
-- Live TV integration
-- Supports both TV and FM content
+### 📱 Jellyfin Media Server
+- **URL:** `https://jellyfin.val-x.com`
+- **Open-Source:** No licensing restrictions or premium features
+- **Free Software:** GPL 2.0 licensed, completely free
+- **Professional Features:** Media management, transcoding, mobile apps
+- **Live TV Integration:** Supports both TV and FM content
+- **No Claims Required:** Works immediately without authentication
 
 ## 🚀 Quick Deploy to Coolify
 
@@ -67,8 +66,9 @@ val-x-station/
 │   └── README.md         # FM instructions
 ├── ersatztv-config/       # Single ErsatzTV configuration
 ├── ersatztv-output/       # Single ErsatzTV output
-├── plex-config/          # Plex configuration
-└── plex-transcode/       # Plex transcoding cache
+├── jellyfin-config/       # Jellyfin configuration
+├── jellyfin-cache/        # Jellyfin cache
+└── jellyfin-transcode/    # Jellyfin transcoding cache
 ```
 
 ## 🎵 What You Get

@@ -20,33 +20,34 @@ services:
     networks:
       - val-x-network
 
-  # Plex Media Server (LinuxServer image for better compatibility)
-  plex:
-    image: lscr.io/linuxserver/plex:latest
-    container_name: plex-val-x
+  # Jellyfin Media Server (open-source alternative to Plex)
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin-val-x
     restart: unless-stopped
     ports:
-      - "32400:32400/tcp"  # Plex Web UI
-      - "32400:32400/udp"  # Plex Discovery
+      - "8096:8096"  # Jellyfin Web UI
+      - "8920:8920"  # Jellyfin HTTPS
+      - "7359:7359/udp"  # Jellyfin Discovery
+      - "1900:1900/udp"  # Jellyfin DLNA
     environment:
-      - PLEX_CLAIM=${PLEX_CLAIM:-}  # Set in Coolify environment variables
       - PUID=1000
       - PGID=1000
       - TZ=UTC
-      - VERSION=docker
-      - UMASK=022
+      - JELLYFIN_PublishedServerUrl=https://jellyfin.val-x.com
     volumes:
-      - ./plex-config:/config
+      - ./jellyfin-config:/config
       - ./videos:/data/music-videos
       - ./audio:/data/music-audio
       - ./ersatztv-output:/data/live-tv:ro
-      - ./plex-transcode:/transcode
+      - ./jellyfin-cache:/cache
+      - ./jellyfin-transcode:/transcode
     depends_on:
       - ersatztv
     networks:
       - val-x-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:32400/web"]
+      test: ["CMD", "curl", "-f", "http://localhost:8096"]
       interval: 30s
       timeout: 10s
       retries: 3
