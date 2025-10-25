@@ -30,11 +30,11 @@ services:
       - "8920:8920"  # Jellyfin HTTPS
       - "7359:7359/udp"  # Jellyfin Discovery
       - "1900:1900/udp"  # Jellyfin DLNA
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=UTC
-      - JELLYFIN_PublishedServerUrl=https://jellyfin.val-x.com
+           environment:
+             - PUID=1000
+             - PGID=1000
+             - TZ=UTC
+             - JELLYFIN_PublishedServerUrl=https://play.val-x.com
     volumes:
       - ./jellyfin-config:/config
       - ./videos:/data/music-videos
