@@ -10,6 +10,8 @@ services:
       - "8409:8409"  # ErsatzTV Web UI (manages both TV and FM)
     environment:
       - TZ=UTC
+      - PUID=1000
+      - PGID=1000
     volumes:
       - ./ersatztv-config:/config
       - ./videos:/media/music-videos:ro
@@ -18,19 +20,27 @@ services:
     networks:
       - val-x-network
 
-  # Plex Media Server (supports both TV and FM)
+  # Plex Media Server (LinuxServer image for better compatibility)
   plex:
-    image: plexinc/pms-docker:latest
+    image: lscr.io/linuxserver/plex:latest
     container_name: plex-val-x
     restart: unless-stopped
     ports:
       - "32400:32400/tcp"  # Plex Web UI
       - "32400:32400/udp"  # Plex Discovery
+      - "1900:1900/udp"    # Plex DLNA
+      - "3005:3005/tcp"    # Plex Companion
+      - "8324:8324/tcp"    # Plex Companion
+      - "32410:32410/udp"   # Plex Companion
+      - "32412:32412/udp"   # Plex Companion
+      - "32413:32413/udp"   # Plex Companion
+      - "32414:32414/udp"   # Plex Companion
     environment:
       - PLEX_CLAIM=${PLEX_CLAIM:-}  # Set in Coolify environment variables
-      - PLEX_UID=1000
-      - PLEX_GID=1000
+      - PUID=1000
+      - PGID=1000
       - TZ=UTC
+      - VERSION=docker
     volumes:
       - ./plex-config:/config
       - ./videos:/data/music-videos

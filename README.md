@@ -5,7 +5,7 @@ Professional music streaming solution with both **Val-X TV** (music videos) and 
 ## 🎯 What You Get
 
 ### 📺📻 Val-X Station (TV + FM)
-- **URL:** `http://your-domain:8409`
+- **URL:** `https://station.val-x.com/ersatztv`
 - **Single ErsatzTV instance** manages both TV and FM channels
 - **TV Channels:** Music videos with professional scheduling
 - **FM Channels:** Audio radio with playlist management
@@ -13,7 +13,8 @@ Professional music streaming solution with both **Val-X TV** (music videos) and 
 - **Advanced Features:** EPG generation, commercial breaks, multiple quality streams
 
 ### 📱 Plex Media Server
-- **URL:** `http://your-domain:32400/web`
+- **URL:** `https://station.val-x.com/plex`
+- **LinuxServer Image:** Better compatibility and performance
 - Professional media management
 - User accounts and sharing
 - Mobile apps support
