@@ -28,13 +28,6 @@ services:
     ports:
       - "32400:32400/tcp"  # Plex Web UI
       - "32400:32400/udp"  # Plex Discovery
-      - "1900:1900/udp"    # Plex DLNA
-      - "3005:3005/tcp"    # Plex Companion
-      - "8324:8324/tcp"    # Plex Companion
-      - "32410:32410/udp"   # Plex Companion
-      - "32412:32412/udp"   # Plex Companion
-      - "32413:32413/udp"   # Plex Companion
-      - "32414:32414/udp"   # Plex Companion
     environment:
       - PLEX_CLAIM=${PLEX_CLAIM:-}  # Set in Coolify environment variables
       - PUID=1000
