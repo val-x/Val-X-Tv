@@ -7,10 +7,8 @@ echo "🎵 Setting up Val-X Dual Station (TV + FM) for Coolify"
 echo "====================================================="
 
 # Create necessary directories
-mkdir -p ersatztv-tv-config
-mkdir -p ersatztv-fm-config
-mkdir -p ersatztv-tv-output
-mkdir -p ersatztv-fm-output
+mkdir -p ersatztv-config
+mkdir -p ersatztv-output
 mkdir -p plex-config
 mkdir -p plex-transcode
 mkdir -p videos
@@ -49,13 +47,11 @@ EOF
 
 echo "✅ Val-X Dual Station setup complete!"
 echo ""
-echo "📺 Val-X TV (Music Videos):"
+echo "📺📻 Val-X Station (TV + FM):"
 echo "  - Add videos to: ./videos/"
-echo "  - Access at: http://your-domain:8409"
-echo ""
-echo "📻 Val-X FM (Audio Radio):"
 echo "  - Add audio to: ./audio/"
-echo "  - Access at: http://your-domain:8410"
+echo "  - Access at: http://your-domain:8409"
+echo "  - Single ErsatzTV instance manages both TV and FM channels"
 echo ""
 echo "📱 Plex Media Server:"
 echo "  - Access at: http://your-domain:32400/web"

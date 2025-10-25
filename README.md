@@ -4,21 +4,13 @@ Professional music streaming solution with both **Val-X TV** (music videos) and 
 
 ## 🎯 What You Get
 
-### 📺 Val-X TV (Music Videos)
+### 📺📻 Val-X Station (TV + FM)
 - **URL:** `http://your-domain:8409`
-- Professional TV channel creation
-- Advanced scheduling
-- Commercial break support
-- EPG generation
-- Multiple quality streams
-
-### 📻 Val-X FM (Audio Radio)
-- **URL:** `http://your-domain:8410`
-- Professional radio station
-- Audio streaming
-- Playlist management
-- DJ-style broadcasting
-- Multiple audio channels
+- **Single ErsatzTV instance** manages both TV and FM channels
+- **TV Channels:** Music videos with professional scheduling
+- **FM Channels:** Audio radio with playlist management
+- **Resource Optimized:** Reduced server load with unified instance
+- **Advanced Features:** EPG generation, commercial breaks, multiple quality streams
 
 ### 📱 Plex Media Server
 - **URL:** `http://your-domain:32400/web`
@@ -62,8 +54,8 @@ PLEX_CLAIM=your-plex-claim-token
 ## 📁 Project Structure
 
 ```
-val-x-dual-station/
-├── docker-compose.yml      # Main deployment file
+val-x-station/
+├── docker-compose.yml      # Optimized single-instance deployment
 ├── setup.sh               # Setup script
 ├── README.md              # Main documentation
 ├── DEPLOY.md              # Quick deployment guide
@@ -72,10 +64,8 @@ val-x-dual-station/
 │   └── README.md         # TV instructions
 ├── audio/                 # Val-X FM audio files
 │   └── README.md         # FM instructions
-├── ersatztv-tv-config/    # Val-X TV configuration
-├── ersatztv-fm-config/    # Val-X FM configuration
-├── ersatztv-tv-output/    # Val-X TV output
-├── ersatztv-fm-output/    # Val-X FM output
+├── ersatztv-config/       # Single ErsatzTV configuration
+├── ersatztv-output/       # Single ErsatzTV output
 ├── plex-config/          # Plex configuration
 └── plex-transcode/       # Plex transcoding cache
 ```

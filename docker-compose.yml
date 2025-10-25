@@ -1,35 +1,20 @@
 version: '3.8'
 
 services:
-  # Val-X TV - Music Video Station
-  ersatztv-tv:
+  # Single ErsatzTV instance for both Val-X TV and Val-X FM
+  ersatztv:
     image: ghcr.io/ersatztv/ersatztv:latest
-    container_name: val-x-tv
+    container_name: val-x-station
     restart: unless-stopped
     ports:
-      - "8409:8409"  # Val-X TV Web UI
+      - "8409:8409"  # ErsatzTV Web UI (manages both TV and FM)
     environment:
       - TZ=UTC
     volumes:
-      - ./ersatztv-tv-config:/config
+      - ./ersatztv-config:/config
       - ./videos:/media/music-videos:ro
-      - ./ersatztv-tv-output:/output
-    networks:
-      - val-x-network
-
-  # Val-X FM - Audio Radio Station
-  ersatztv-fm:
-    image: ghcr.io/ersatztv/ersatztv:latest
-    container_name: val-x-fm
-    restart: unless-stopped
-    ports:
-      - "8410:8409"  # Val-X FM Web UI (different port)
-    environment:
-      - TZ=UTC
-    volumes:
-      - ./ersatztv-fm-config:/config
       - ./audio:/media/music-audio:ro
-      - ./ersatztv-fm-output:/output
+      - ./ersatztv-output:/output
     networks:
       - val-x-network
 
@@ -50,12 +35,10 @@ services:
       - ./plex-config:/config
       - ./videos:/data/music-videos
       - ./audio:/data/music-audio
-      - ./ersatztv-tv-output:/data/live-tv:ro
-      - ./ersatztv-fm-output:/data/live-fm:ro
+      - ./ersatztv-output:/data/live-tv:ro
       - ./plex-transcode:/transcode
     depends_on:
-      - ersatztv-tv
-      - ersatztv-fm
+      - ersatztv
     networks:
       - val-x-network
 
