@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   ersatztv:
-    image: jasonraimondi/ersatztv:latest
+    image: ersatztv/ersatztv:latest
     container_name: ersatztv-music-tv
     restart: unless-stopped
     ports:
