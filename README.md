@@ -193,6 +193,33 @@ val-x-station/
 
 ## 🛠️ Troubleshooting
 
+### AzuraCast "No Available Server" Error on Coolify
+
+If you see "No available server" when accessing `https://fm.val-x.com/`:
+
+1. **Wait for Container Initialization**
+   - AzuraCast takes 2-5 minutes to fully start
+   - Check Coolify logs to see initialization progress
+   - Look for "AzuraCast initialized" message
+
+2. **Verify Coolify Proxy Configuration**
+   - Go to your project in Coolify
+   - Check domain configuration for `fm.val-x.com`
+   - **Target Port should be:** `8080` (internal container port)
+   - **NOT** `8081` (external host port)
+   - Protocol: `http` (not https for internal routing)
+
+3. **Check Container Health**
+   - In Coolify, view the AzuraCast container logs
+   - Ensure status shows "healthy"
+   - Look for database initialization messages
+
+4. **Restart if Needed**
+   - Stop the AzuraCast service in Coolify
+   - Wait 30 seconds
+   - Start the service again
+   - Wait 5 minutes for full initialization
+
 ### Services Not Starting
 - Check Coolify logs
 - Verify environment variables
@@ -202,6 +229,7 @@ val-x-station/
 - Check Coolify proxy configuration
 - Verify domain settings
 - Check firewall rules
+- Ensure target port matches internal container port (8080 for AzuraCast)
 
 ### Videos Not Playing
 - Verify video files are in `videos/` directory
