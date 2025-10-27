@@ -17,10 +17,18 @@ services:
       - ./ersatztv-config:/config
       - ./videos:/media/music-videos:ro
       - ./ersatztv-output:/output
-    # Hardware acceleration support (Intel/AMD GPU)
-    # If you have NVIDIA GPU, comment out 'devices' and uncomment 'deploy' section
-    devices:
-      - /dev/dri:/dev/dri
+    # Hardware acceleration support (OPTIONAL - uncomment if you have GPU)
+    # For Intel/AMD GPUs:
+    # devices:
+    #   - /dev/dri:/dev/dri
+    # For NVIDIA GPUs, add this section:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
     networks:
       - val-x-network
     healthcheck:
@@ -76,7 +84,8 @@ services:
       - PGID=1000
       - TZ=UTC
       - JELLYFIN_PublishedServerUrl=https://play.val-x.com
-      - NVIDIA_VISIBLE_DEVICES=all
+      # Enable NVIDIA GPU support (uncomment if you have NVIDIA GPU):
+      # - NVIDIA_VISIBLE_DEVICES=all
     volumes:
       - ./jellyfin-config:/config
       - ./videos:/data/music-videos
@@ -84,10 +93,18 @@ services:
       - ./ersatztv-output:/data/live-tv:ro
       - ./jellyfin-cache:/cache
       - ./jellyfin-transcode:/transcode
-    # Hardware acceleration support (Intel/AMD GPU)
-    # If you have NVIDIA GPU, comment out 'devices' and uncomment 'deploy' section
-    devices:
-      - /dev/dri:/dev/dri
+    # Hardware acceleration support (OPTIONAL - uncomment if you have GPU)
+    # For Intel/AMD GPUs:
+    # devices:
+    #   - /dev/dri:/dev/dri
+    # For NVIDIA GPUs, add this section:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
     depends_on:
       - ersatztv
     networks:
