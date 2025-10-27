@@ -36,11 +36,19 @@ services:
       - PGID=1000
       - TZ=UTC
       - AZURACAST_HOST=fm.val-x.com
+      - AZURACAST_HTTP_PORT=8080
+      - COMPOSE_PROJECT_NAME=val-x-fm
     volumes:
       - ./azuracast-data:/var/azuracast
       - ./audio:/var/azuracast/music:ro
     networks:
       - val-x-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/public/login"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
 
   # Jellyfin Media Server (open-source alternative to Plex)
   # Access: https://play.val-x.com
