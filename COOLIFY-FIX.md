@@ -114,16 +114,22 @@ Both Jellyfin and AzuraCast take 2-5 minutes to fully initialize:
 
 ### Hardware Acceleration Warning Persists
 
-**Check in ErsatzTV:**
-1. Go to Settings → FFmpeg Profiles
+**If you DO have a GPU:**
+1. In ErsatzTV, go to Settings → FFmpeg Profiles
 2. Find the profile used by "Val-X TV" channel
-3. Check if encoder uses hardware acceleration
-4. Update encoder to use VAAPI (Intel/AMD) or NVENC (NVIDIA)
+3. Update encoder to use VAAPI (Intel/AMD) or NVENC (NVIDIA)
+4. Uncomment GPU device lines in docker-compose.yml:
+   ```yaml
+   devices:
+     - /dev/dri:/dev/dri
+   ```
 
-**If you don't have a GPU:**
-- Use CPU encoding (software encoding)
-- Accept the warning, it won't affect functionality
-- Disable hardware acceleration check in settings
+**If you DON'T have a GPU (most servers):**
+- The warning is **expected and harmless** ✅
+- ErsatzTV will use CPU encoding (software encoding)
+- This works perfectly fine, just uses more CPU
+- You can safely ignore the hardware acceleration warning
+- No configuration needed - it's working as designed!
 
 ## 📊 Port Reference
 
