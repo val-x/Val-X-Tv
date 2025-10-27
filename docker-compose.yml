@@ -17,8 +17,18 @@ services:
       - ./ersatztv-config:/config
       - ./videos:/media/music-videos:ro
       - ./ersatztv-output:/output
+    # Hardware acceleration support (Intel/AMD GPU)
+    # If you have NVIDIA GPU, comment out 'devices' and uncomment 'deploy' section
+    devices:
+      - /dev/dri:/dev/dri
     networks:
       - val-x-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8409/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   # AzuraCast for Val-X FM (radio streaming)
   # Access: https://fm.val-x.com
@@ -66,6 +76,7 @@ services:
       - PGID=1000
       - TZ=UTC
       - JELLYFIN_PublishedServerUrl=https://play.val-x.com
+      - NVIDIA_VISIBLE_DEVICES=all
     volumes:
       - ./jellyfin-config:/config
       - ./videos:/data/music-videos
@@ -73,6 +84,10 @@ services:
       - ./ersatztv-output:/data/live-tv:ro
       - ./jellyfin-cache:/cache
       - ./jellyfin-transcode:/transcode
+    # Hardware acceleration support (Intel/AMD GPU)
+    # If you have NVIDIA GPU, comment out 'devices' and uncomment 'deploy' section
+    devices:
+      - /dev/dri:/dev/dri
     depends_on:
       - ersatztv
     networks:
