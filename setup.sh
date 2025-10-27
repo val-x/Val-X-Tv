@@ -9,6 +9,7 @@ echo "====================================================="
 # Create necessary directories
 mkdir -p ersatztv-config
 mkdir -p ersatztv-output
+mkdir -p azuracast-data
 mkdir -p jellyfin-config
 mkdir -p jellyfin-cache
 mkdir -p jellyfin-transcode
@@ -48,14 +49,18 @@ EOF
 
 echo "✅ Val-X Dual Station setup complete!"
 echo ""
-echo "📺📻 Val-X Station (TV + FM):"
+echo "📺 Val-X TV (Music Videos):"
 echo "  - Add videos to: ./videos/"
+echo "  - Access at: https://tv.val-x.com"
+echo "  - Powered by ErsatzTV"
+echo ""
+echo "📻 Val-X FM (Radio Station):"
 echo "  - Add audio to: ./audio/"
-echo "  - Access at: https://ersatztv.val-x.com"
-echo "  - Single ErsatzTV instance manages both TV and FM channels"
+echo "  - Access at: https://fm.val-x.com"
+echo "  - Powered by AzuraCast"
 echo ""
 echo "📱 Jellyfin Media Server:"
-echo "  - Access at: https://jellyfin.val-x.com"
+echo "  - Access at: https://play.val-x.com"
 echo "  - Open-source alternative to Plex"
 echo "  - No licensing restrictions"
 echo "  - Supports both TV and FM content"
@@ -64,5 +69,6 @@ echo "Next steps:"
 echo "1. Add your music videos to ./videos/"
 echo "2. Add your audio files to ./audio/"
 echo "3. Deploy to Coolify"
-echo "4. Configure Val-X TV and Val-X FM channels"
-echo "5. Set up Jellyfin media libraries"
+echo "4. Configure Val-X TV channels in ErsatzTV"
+echo "5. Configure Val-X FM station in AzuraCast"
+echo "6. Set up Jellyfin media libraries"

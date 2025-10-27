@@ -1,13 +1,14 @@
 version: '3.8'
 
 services:
-  # Single ErsatzTV instance for both Val-X TV and Val-X FM
+  # ErsatzTV for Val-X TV (music videos)
+  # Access: https://tv.val-x.com
   ersatztv:
     image: ghcr.io/ersatztv/ersatztv:latest
-    container_name: val-x-station
+    container_name: val-x-tv
     restart: unless-stopped
     ports:
-      - "8409:8409"  # ErsatzTV Web UI (manages both TV and FM)
+      - "8409:8409"  # ErsatzTV Web UI
     environment:
       - TZ=UTC
       - PUID=1000
@@ -15,12 +16,34 @@ services:
     volumes:
       - ./ersatztv-config:/config
       - ./videos:/media/music-videos:ro
-      - ./audio:/media/music-audio:ro
       - ./ersatztv-output:/output
     networks:
       - val-x-network
 
+  # AzuraCast for Val-X FM (radio streaming)
+  # Access: https://fm.val-x.com
+  # Using full AzuraCast Docker install (includes all services)
+  azuracast:
+    image: ghcr.io/azuracast/azuracast:latest
+    container_name: val-x-fm
+    restart: unless-stopped
+    ports:
+      - "8080:8080"  # AzuraCast Web UI
+      - "2020:2020"  # Icecast (HTTP)
+      - "8443:8443"  # Icecast (HTTPS)
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+      - AZURACAST_HOST=fm.val-x.com
+    volumes:
+      - ./azuracast-data:/var/azuracast
+      - ./audio:/var/azuracast/music:ro
+    networks:
+      - val-x-network
+
   # Jellyfin Media Server (open-source alternative to Plex)
+  # Access: https://play.val-x.com
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin-val-x
@@ -30,11 +53,11 @@ services:
       - "8920:8920"  # Jellyfin HTTPS
       - "7359:7359/udp"  # Jellyfin Discovery
       - "1900:1900/udp"  # Jellyfin DLNA
-           environment:
-             - PUID=1000
-             - PGID=1000
-             - TZ=UTC
-             - JELLYFIN_PublishedServerUrl=https://play.val-x.com
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+      - JELLYFIN_PublishedServerUrl=https://play.val-x.com
     volumes:
       - ./jellyfin-config:/config
       - ./videos:/data/music-videos

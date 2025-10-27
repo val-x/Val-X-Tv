@@ -1,23 +1,29 @@
 # Val-X Dual Station - TV + FM
 
-Professional music streaming solution with both **Val-X TV** (music videos) and **Val-X FM** (audio radio) using Jellyfin + ErsatzTV.
+Professional music streaming solution with both **Val-X TV** (music videos) and **Val-X FM** (audio radio) using ErsatzTV + AzuraCast + Jellyfin.
 
 ## 🎯 What You Get
 
-### 📺📻 Val-X Station (TV + FM)
-- **URL:** `https://ersatztv.val-x.com`
-- **Single ErsatzTV instance** manages both TV and FM channels
+### 📺 Val-X TV (Music Videos)
+- **URL:** `https://tv.val-x.com`
+- **Powered by:** ErsatzTV
 - **TV Channels:** Music videos with professional scheduling
-- **FM Channels:** Audio radio with playlist management
-- **Resource Optimized:** Reduced server load with unified instance
 - **Advanced Features:** EPG generation, commercial breaks, multiple quality streams
+- **Best for:** Video content streaming
+
+### 📻 Val-X FM (Radio Station)
+- **URL:** `https://fm.val-x.com`
+- **Powered by:** AzuraCast
+- **Radio Features:** Audio streaming, playlists, auto-DJ, analytics
+- **Advanced Features:** Song requests, web DJ access, custom branding
+- **Best for:** Audio content streaming
 
 ### 📱 Jellyfin Media Server
-- **URL:** `https://jellyfin.val-x.com`
+- **URL:** `https://play.val-x.com`
 - **Open-Source:** No licensing restrictions or premium features
 - **Free Software:** GPL 2.0 licensed, completely free
 - **Professional Features:** Media management, transcoding, mobile apps
-- **Live TV Integration:** Supports both TV and FM content
+- **Live TV Integration:** Supports both TV and radio content
 - **No Claims Required:** Works immediately without authentication
 
 ## 🚀 Quick Deploy to Coolify
@@ -37,25 +43,15 @@ Professional music streaming solution with both **Val-X TV** (music videos) and 
 5. **Use the docker-compose-coolify.yml file**
 6. **Deploy!**
 
-### Step 3: Configure Environment Variables
+### Step 3: No Environment Variables Required!
 
-In Coolify, add these environment variables:
-
-```
-PLEX_CLAIM=your-plex-claim-token
-```
-
-**To get your Plex claim token:**
-1. Visit: https://plex.tv/claim
-2. Sign in to your Plex account
-3. Copy the claim token
-4. Add it as `PLEX_CLAIM` in Coolify
+Unlike Plex, both **AzuraCast** and **Jellyfin** work without any claim tokens or license keys. Just deploy and start using!
 
 ## 📁 Project Structure
 
 ```
 val-x-station/
-├── docker-compose.yml      # Optimized single-instance deployment
+├── docker-compose.yml      # Complete deployment configuration
 ├── setup.sh               # Setup script
 ├── README.md              # Main documentation
 ├── DEPLOY.md              # Quick deployment guide
@@ -64,8 +60,9 @@ val-x-station/
 │   └── README.md         # TV instructions
 ├── audio/                 # Val-X FM audio files
 │   └── README.md         # FM instructions
-├── ersatztv-config/       # Single ErsatzTV configuration
-├── ersatztv-output/       # Single ErsatzTV output
+├── ersatztv-config/       # ErsatzTV configuration
+├── ersatztv-output/       # ErsatzTV output
+├── azuracast-data/        # AzuraCast data and configuration
 ├── jellyfin-config/       # Jellyfin configuration
 ├── jellyfin-cache/        # Jellyfin cache
 └── jellyfin-transcode/    # Jellyfin transcoding cache
@@ -74,28 +71,42 @@ val-x-station/
 ## 🎵 What You Get
 
 ### ErsatzTV (Professional TV Channels)
-- **URL:** `http://your-domain:8409`
+- **URL:** `https://tv.val-x.com`
 - **Features:**
   - Multiple TV channels
   - Advanced scheduling
   - Commercial break support
   - EPG generation
   - Professional broadcasting
+- **Best for:** Music video streaming
 
-### Plex Media Server (Media Management)
-- **URL:** `http://your-domain:32400/web`
+### AzuraCast (Radio Broadcasting)
+- **URL:** `https://fm.val-x.com`
+- **Features:**
+  - Auto-DJ playlists
+  - Song requests
+  - Web DJ access
+  - Station analytics
+  - Custom branding
+  - Multiple audio formats
+  - Stream listeners tracking
+- **Best for:** Audio radio streaming
+
+### Jellyfin Media Server (Media Management)
+- **URL:** `https://play.val-x.com`
 - **Features:**
   - Professional media management
   - User accounts and sharing
   - Mobile apps support
   - Live TV integration
   - Automatic transcoding
+  - No licensing restrictions
 
 ## 🔧 Setup Instructions
 
-### ErsatzTV Setup
+### ErsatzTV Setup (Val-X TV)
 
-1. **Access ErsatzTV:** `http://your-domain:8409`
+1. **Access ErsatzTV:** `https://tv.val-x.com`
 2. **Create admin account**
 3. **Add media library:**
    - Path: `/media/music-videos`
@@ -104,16 +115,32 @@ val-x-station/
    - Add new channel
    - Configure schedule
    - Add content
-5. **Start streaming**
+5. **Start streaming music videos**
 
-### Plex Setup
+### AzuraCast Setup (Val-X FM)
 
-1. **Access Plex:** `http://your-domain:32400/web`
+1. **Access AzuraCast:** `https://fm.val-x.com`
+2. **First-time setup:**
+   - Create admin account
+   - Set timezone
+   - Configure station
+3. **Upload music:**
+   - Go to Music Files
+   - Upload your audio files
+   - Create playlists
+4. **Configure Auto-DJ:**
+   - Set up playlists
+   - Configure shuffle settings
+   - Enable requests
+5. **Start broadcasting**
+
+### Jellyfin Setup
+
+1. **Access Jellyfin:** `https://play.val-x.com`
 2. **Complete setup wizard**
-3. **Add music videos library:**
-   - Go to Settings → Libraries
-   - Add Library → Movies
-   - Browse to `/data/music-videos`
+3. **Add media libraries:**
+   - Music Videos: `/data/music-videos`
+   - Audio Music: `/data/music-audio`
 4. **Configure Live TV:**
    - Go to Settings → Live TV & DVR
    - Enable Live TV & DVR
