@@ -26,6 +26,16 @@ Professional music streaming solution with both **Val-X TV** (music videos) and 
 - **Live TV Integration:** Supports both TV and radio content
 - **No Claims Required:** Works immediately without authentication
 
+## 💾 Centralized Storage with MinIO
+
+All services (ErsatzTV, AzuraCast, Jellyfin) now share files via **MinIO object storage**:
+- **Shared volumes** for instant file access between services
+- **S3-compatible** API for programmatic access
+- **Automatic backup** to MinIO every 5 minutes
+- **MinIO Console** for web-based file management
+
+📖 See [MINIO-SETUP.md](MINIO-SETUP.md) for detailed setup and usage instructions.
+
 ## 🚀 Quick Deploy to Coolify
 
 ### Step 1: Prepare Your Repository
@@ -65,7 +75,9 @@ val-x-station/
 ├── azuracast-data/        # AzuraCast data and configuration
 ├── jellyfin-config/       # Jellyfin configuration
 ├── jellyfin-cache/        # Jellyfin cache
-└── jellyfin-transcode/    # Jellyfin transcoding cache
+├── jellyfin-transcode/    # Jellyfin transcoding cache
+├── minio-data/            # MinIO object storage data
+└── MINIO-SETUP.md        # MinIO storage setup guide
 ```
 
 ## 🎵 What You Get
