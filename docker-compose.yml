@@ -109,6 +109,7 @@ services:
       - ./jellyfin-cache:/cache
       - ./jellyfin-transcode:/transcode
     depends_on:
+      - ersatztv
       - minio
     # Hardware acceleration support (OPTIONAL - uncomment if you have GPU)
     # For Intel/AMD GPUs:
@@ -122,8 +123,6 @@ services:
     #         - driver: nvidia
     #           count: 1
     #           capabilities: [gpu]
-    depends_on:
-      - ersatztv
     networks:
       - val-x-network
     healthcheck:
@@ -168,19 +167,20 @@ services:
     depends_on:
       - minio
     entrypoint: /bin/sh
-    command: -c "
-      until (/usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin) do echo '...waiting...' && sleep 2; done;
-      /usr/bin/mc mb --ignore-existing myminio/videos;
-      /usr/bin/mc mb --ignore-existing myminio/audio;
-      /usr/bin/mc mb --ignore-existing myminio/ersatztv-output;
-      /usr/bin/mc anonymous set download myminio/videos;
-      /usr/bin/mc anonymous set download myminio/audio;
-      /usr/bin/mc anonymous set download myminio/ersatztv-output;
-      /usr/bin/mc policy set public myminio/videos;
-      /usr/bin/mc policy set public myminio/audio;
-      /usr/bin/mc policy set public myminio/ersatztv-output;
-      echo 'MinIO buckets initialized successfully';
-    "
+    command:
+      - -c
+      - |
+        until (/usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin) do echo '...waiting...' && sleep 2; done;
+        /usr/bin/mc mb --ignore-existing myminio/videos;
+        /usr/bin/mc mb --ignore-existing myminio/audio;
+        /usr/bin/mc mb --ignore-existing myminio/ersatztv-output;
+        /usr/bin/mc anonymous set download myminio/videos;
+        /usr/bin/mc anonymous set download myminio/audio;
+        /usr/bin/mc anonymous set download myminio/ersatztv-output;
+        /usr/bin/mc policy set public myminio/videos;
+        /usr/bin/mc policy set public myminio/audio;
+        /usr/bin/mc policy set public myminio/ersatztv-output;
+        echo 'MinIO buckets initialized successfully';
     networks:
       - val-x-network
 
@@ -198,15 +198,16 @@ services:
       - shared-audio:/data/audio:ro
       - shared-output:/data/output:ro
     entrypoint: /bin/sh
-    command: -c "
-      /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin;
-      while true; do
-        /usr/bin/mc mirror --overwrite /data/videos myminio/videos/ || true;
-        /usr/bin/mc mirror --overwrite /data/audio myminio/audio/ || true;
-        /usr/bin/mc mirror --overwrite /data/output myminio/ersatztv-output/ || true;
-        sleep 300;
-      done
-    "
+    command:
+      - -c
+      - |
+        /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin;
+        while true; do
+          /usr/bin/mc mirror --overwrite /data/videos myminio/videos/ || true;
+          /usr/bin/mc mirror --overwrite /data/audio myminio/audio/ || true;
+          /usr/bin/mc mirror --overwrite /data/output myminio/ersatztv-output/ || true;
+          sleep 300;
+        done
     networks:
       - val-x-network
 
