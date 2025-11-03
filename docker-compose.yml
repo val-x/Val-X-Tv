@@ -18,8 +18,11 @@ services:
       - traefik.http.services.ersatztv.loadbalancer.server.port=8409
     volumes:
       - ./ersatztv-config:/config
-      - ./videos:/media/music-videos:ro
-      - ./ersatztv-output:/output
+      - shared-videos:/media/music-videos:ro  # Shared storage (synced to MinIO)
+      - shared-output:/output  # Shared output directory (synced to MinIO)
+      - ./videos:/media/music-videos-local:ro  # Local backup (optional)
+    depends_on:
+      - minio
     # Hardware acceleration support (OPTIONAL - uncomment if you have GPU)
     # For Intel/AMD GPUs:
     # devices:
@@ -64,7 +67,10 @@ services:
       - traefik.http.services.azuracast.loadbalancer.server.port=8080
     volumes:
       - ./azuracast-data:/var/azuracast
-      - ./audio:/var/azuracast/music:ro
+      - shared-audio:/var/azuracast/music:ro  # Shared storage (synced to MinIO)
+      - ./audio:/var/azuracast/music-local:ro  # Local backup (optional)
+    depends_on:
+      - minio
     networks:
       - val-x-network
     healthcheck:
@@ -97,11 +103,13 @@ services:
       - traefik.http.services.jellyfin.loadbalancer.server.port=8096
     volumes:
       - ./jellyfin-config:/config
-      - ./videos:/data/music-videos
-      - ./audio:/data/music-audio
-      - ./ersatztv-output:/data/live-tv:ro
+      - shared-videos:/data/music-videos:ro  # Shared storage (synced to MinIO)
+      - shared-audio:/data/music-audio:ro  # Shared storage (synced to MinIO)
+      - shared-output:/data/live-tv:ro  # Shared ErsatzTV output (synced to MinIO)
       - ./jellyfin-cache:/cache
       - ./jellyfin-transcode:/transcode
+    depends_on:
+      - minio
     # Hardware acceleration support (OPTIONAL - uncomment if you have GPU)
     # For Intel/AMD GPUs:
     # devices:
@@ -124,6 +132,93 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
+
+  # MinIO Object Storage (S3-compatible)
+  # Access: http://localhost:9000 (Console) or http://localhost:9001 (API)
+  minio:
+    image: minio/minio:latest
+    container_name: minio-storage
+    restart: unless-stopped
+    ports:
+      - "9000:9000"  # MinIO Console
+      - "9001:9001"  # MinIO API
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+      - TZ=UTC
+    volumes:
+      - ./minio-data:/data
+    command: server /data --console-address ":9000"
+    networks:
+      - val-x-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      # Critical: Tells Traefik which port to route to (if you add domain)
+      - traefik.http.services.minio.loadbalancer.server.port=9000
+
+  # MinIO Client for bucket initialization
+  minio-init:
+    image: minio/mc:latest
+    container_name: minio-init
+    depends_on:
+      - minio
+    entrypoint: /bin/sh
+    command: -c "
+      until (/usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin) do echo '...waiting...' && sleep 2; done;
+      /usr/bin/mc mb --ignore-existing myminio/videos;
+      /usr/bin/mc mb --ignore-existing myminio/audio;
+      /usr/bin/mc mb --ignore-existing myminio/ersatztv-output;
+      /usr/bin/mc anonymous set download myminio/videos;
+      /usr/bin/mc anonymous set download myminio/audio;
+      /usr/bin/mc anonymous set download myminio/ersatztv-output;
+      /usr/bin/mc policy set public myminio/videos;
+      /usr/bin/mc policy set public myminio/audio;
+      /usr/bin/mc policy set public myminio/ersatztv-output;
+      echo 'MinIO buckets initialized successfully';
+    "
+    networks:
+      - val-x-network
+
+  # Sync service to sync shared volumes to MinIO
+  # This keeps MinIO in sync with shared storage
+  minio-sync:
+    image: minio/mc:latest
+    container_name: minio-sync
+    restart: unless-stopped
+    depends_on:
+      - minio
+      - minio-init
+    volumes:
+      - shared-videos:/data/videos:ro
+      - shared-audio:/data/audio:ro
+      - shared-output:/data/output:ro
+    entrypoint: /bin/sh
+    command: -c "
+      /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin;
+      while true; do
+        /usr/bin/mc mirror --overwrite /data/videos myminio/videos/ || true;
+        /usr/bin/mc mirror --overwrite /data/audio myminio/audio/ || true;
+        /usr/bin/mc mirror --overwrite /data/output myminio/ersatztv-output/ || true;
+        sleep 300;
+      done
+    "
+    networks:
+      - val-x-network
+
+volumes:
+  # Shared volumes that can be accessed by all services
+  # These are backed by MinIO for centralized storage
+  shared-videos:
+    driver: local
+  shared-audio:
+    driver: local
+  shared-output:
+    driver: local
 
 networks:
   val-x-network:
