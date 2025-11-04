@@ -1,36 +1,57 @@
-# Music TV Station - Coolify Deployment
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
 
-# Configuration files (will be created automatically)
-ersatztv-config/
-plex-config/
-plex-transcode/
-ersatztv-output/
+# Testing
+coverage/
 
-# Video files (uncomment if you want to ignore them)
-# *.mp4
-# *.mkv
-# *.avi
-# *.mov
-# *.wmv
+# Production
+dist/
+build/
 
-# OS generated files
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+*.log
+
+# OS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 
-# IDE files
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
-# Backup files
-*.bak
-*.backup
+# MinIO data
+minio-data/
+data/
 
-# Logs
-*.log
+# Jellyfin data
+jellyfin-config/
+jellyfin-cache/
+jellyfin-transcode/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Bun
+.bun/
+bun.lockb
+
+# TypeScript
+*.tsbuildinfo

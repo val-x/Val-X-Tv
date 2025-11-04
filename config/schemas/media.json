@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique media ID"
+    },
+    "title": {
+      "type": "string",
+      "description": "Media title"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["movie", "tv", "audio", "course"],
+      "description": "Media type"
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Available language tracks"
+    },
+    "qualities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Available quality variants (e.g., 480p, 720p, 96k, 128k)"
+    },
+    "premium": {
+      "type": "boolean",
+      "description": "Whether content requires premium subscription"
+    },
+    "createdAt": {
+      "type": "number",
+      "description": "Unix timestamp of upload"
+    },
+    "duration": {
+      "type": "number",
+      "description": "Duration in seconds"
+    },
+    "thumbnail": {
+      "type": "string",
+      "description": "Thumbnail path in MinIO"
+    },
+    "description": {
+      "type": "string",
+      "description": "Media description"
+    }
+  },
+  "required": ["id", "title", "type", "languages", "premium", "createdAt"]
+}
+

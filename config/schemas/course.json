@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique course ID"
+    },
+    "title": {
+      "type": "string",
+      "description": "Course title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Course description"
+    },
+    "premium": {
+      "type": "boolean",
+      "description": "Whether course requires premium subscription"
+    },
+    "lessons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          },
+          "mediaId": {
+            "type": "string",
+            "description": "Reference to media ID"
+          },
+          "duration": {
+            "type": "number",
+            "description": "Duration in seconds"
+          }
+        },
+        "required": ["id", "title", "order", "mediaId"]
+      }
+    },
+    "createdAt": {
+      "type": "number",
+      "description": "Unix timestamp of creation"
+    },
+    "thumbnail": {
+      "type": "string",
+      "description": "Thumbnail path in MinIO"
+    }
+  },
+  "required": ["id", "title", "premium", "lessons", "createdAt"]
+}
+

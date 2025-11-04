@@ -1,275 +1,243 @@
-# Val-X Dual Station - TV + FM
+# Val-X Originals (KVM2 Edition)
 
-Professional music streaming solution with both **Val-X TV** (music videos) and **Val-X FM** (audio radio) using ErsatzTV + AzuraCast + Jellyfin.
+A lightweight, full-featured, self-hosted media platform for movies, TV, FM, music, and courses — built with Jellyfin + MinIO + Bun (Hono.js) serverless APIs + React Web + Expo App. Runs entirely on a single KVM2 server with Coolify.
 
-## 🎯 What You Get
-
-### 📺 Val-X TV (Music Videos)
-- **URL:** `https://tv.val-x.com`
-- **Powered by:** ErsatzTV
-- **TV Channels:** Music videos with professional scheduling
-- **Advanced Features:** EPG generation, commercial breaks, multiple quality streams
-- **Best for:** Video content streaming
-
-### 📻 Val-X FM (Radio Station)
-- **URL:** `https://fm.val-x.com`
-- **Powered by:** AzuraCast
-- **Radio Features:** Audio streaming, playlists, auto-DJ, analytics
-- **Advanced Features:** Song requests, web DJ access, custom branding
-- **Best for:** Audio content streaming
-
-### 📱 Jellyfin Media Server
-- **URL:** `https://play.val-x.com`
-- **Open-Source:** No licensing restrictions or premium features
-- **Free Software:** GPL 2.0 licensed, completely free
-- **Professional Features:** Media management, transcoding, mobile apps
-- **Live TV Integration:** Supports both TV and radio content
-- **No Claims Required:** Works immediately without authentication
-
-## 💾 Centralized Storage with MinIO
-
-All services (ErsatzTV, AzuraCast, Jellyfin) now share files via **MinIO object storage**:
-- **Shared volumes** for instant file access between services
-- **S3-compatible** API for programmatic access
-- **Automatic backup** to MinIO every 5 minutes
-- **MinIO Console** for web-based file management
-
-📖 See [MINIO-SETUP.md](MINIO-SETUP.md) for detailed setup and usage instructions.
-
-## 🚀 Quick Deploy to Coolify
-
-### Step 1: Prepare Your Repository
-
-1. **Fork this repository** or create a new one
-2. **Add your music videos** to the `videos/` directory
-3. **Commit and push** to GitHub
-
-### Step 2: Deploy to Coolify
-
-1. **Go to Coolify** → Projects → New Project
-2. **Choose "Git Repository"**
-3. **Connect your GitHub repository**
-4. **Select "Docker Compose"** as deployment type
-5. **Use the docker-compose-coolify.yml file**
-6. **Deploy!**
-
-### Step 3: No Environment Variables Required!
-
-Unlike Plex, both **AzuraCast** and **Jellyfin** work without any claim tokens or license keys. Just deploy and start using!
-
-## 📁 Project Structure
+## Architecture
 
 ```
-val-x-station/
-├── docker-compose.yml      # Complete deployment configuration
-├── setup.sh               # Setup script
-├── README.md              # Main documentation
-├── DEPLOY.md              # Quick deployment guide
-├── .gitignore             # Git ignore rules
-├── videos/                # Val-X TV music videos
-│   └── README.md         # TV instructions
-├── audio/                 # Val-X FM audio files
-│   └── README.md         # FM instructions
-├── ersatztv-config/       # ErsatzTV configuration
-├── ersatztv-output/       # ErsatzTV output
-├── azuracast-data/        # AzuraCast data and configuration
-├── jellyfin-config/       # Jellyfin configuration
-├── jellyfin-cache/        # Jellyfin cache
-├── jellyfin-transcode/    # Jellyfin transcoding cache
-├── minio-data/            # MinIO object storage data
-└── MINIO-SETUP.md        # MinIO storage setup guide
+┌─────────────────────────────────────────────────────────┐
+│                    Val-X Originals                      │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐ │
+│  │ React Player │  │ React Admin  │  │  Expo App    │ │
+│  │  (Web UI)    │  │   (Admin)    │  │  (Mobile)    │ │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘ │
+│         │                  │                  │       │
+│         └──────────────────┼──────────────────┘       │
+│                            │                           │
+│                   ┌────────▼────────┐                  │
+│                   │  Bun + Hono.js  │                  │
+│                   │   API Gateway   │                  │
+│                   └────────┬────────┘                  │
+│                            │                           │
+│         ┌──────────────────┼──────────────────┐         │
+│         │                  │                  │         │
+│  ┌──────▼──────┐  ┌───────▼──────┐  ┌───────▼──────┐  │
+│  │   MinIO     │  │   Jellyfin   │  │   FFmpeg    │  │
+│  │  (Storage)  │  │  (Playback)  │  │ (Transcode) │  │
+│  └─────────────┘  └──────────────┘  └──────────────┘  │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
 ```
 
-## 🎵 What You Get
+## Features
 
-### ErsatzTV (Professional TV Channels)
-- **URL:** `https://tv.val-x.com`
-- **Features:**
-  - Multiple TV channels
-  - Advanced scheduling
-  - Commercial break support
-  - EPG generation
-  - Professional broadcasting
-- **Best for:** Music video streaming
+- **Multi-format Media**: Movies, TV shows, music, FM radio, podcasts, and courses
+- **HLS Streaming**: Adaptive bitrate streaming with 480p/720p video and 96k/128k audio
+- **Multi-language Support**: Separate audio tracks per language
+- **User Authentication**: JWT-based auth with role-based access (admin/user/guest)
+- **Subscription System**: Free and premium tiers
+- **Admin Panel**: Upload, manage users, and configure plans
+- **Self-hosted**: Runs entirely on your KVM2 server
+- **MinIO Storage**: S3-compatible object storage
+- **No Database**: All metadata stored as JSON in MinIO
 
-### AzuraCast (Radio Broadcasting)
-- **URL:** `https://fm.val-x.com`
-- **Features:**
-  - Auto-DJ playlists
-  - Song requests
-  - Web DJ access
-  - Station analytics
-  - Custom branding
-  - Multiple audio formats
-  - Stream listeners tracking
-- **Best for:** Audio radio streaming
+## Quick Start
 
-### Jellyfin Media Server (Media Management)
-- **URL:** `https://play.val-x.com`
-- **Features:**
-  - Professional media management
-  - User accounts and sharing
-  - Mobile apps support
-  - Live TV integration
-  - Automatic transcoding
-  - No licensing restrictions
+### Prerequisites
 
-## 🔧 Setup Instructions
+- Bun runtime installed
+- Docker and Docker Compose
+- FFmpeg installed (for transcoding)
+- Coolify (for deployment)
 
-### ErsatzTV Setup (Val-X TV)
+### Installation
 
-1. **Access ErsatzTV:** `https://tv.val-x.com`
-2. **Create admin account**
-3. **Add media library:**
-   - Path: `/media/music-videos`
-   - Type: Movies or TV Shows
-4. **Create channels:**
-   - Add new channel
-   - Configure schedule
-   - Add content
-5. **Start streaming music videos**
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd valx-originals
+```
 
-### AzuraCast Setup (Val-X FM)
+2. Install dependencies:
+```bash
+cd functions && bun install
+cd ../web/valx-player && npm install
+cd ../valx-admin && npm install
+```
 
-1. **Access AzuraCast:** `https://fm.val-x.com`
-2. **First-time setup:**
-   - Create admin account
-   - Set timezone
-   - Configure station
-3. **Upload music:**
-   - Go to Music Files
-   - Upload your audio files
-   - Create playlists
-4. **Configure Auto-DJ:**
-   - Set up playlists
-   - Configure shuffle settings
-   - Enable requests
-5. **Start broadcasting**
+3. Configure environment variables:
+```bash
+cp config/coolify.env.example .env
+# Edit .env with your settings
+```
 
-### Jellyfin Setup
+4. Start services:
+```bash
+cd deploy
+docker-compose up -d
+```
 
-1. **Access Jellyfin:** `https://play.val-x.com`
-2. **Complete setup wizard**
-3. **Add media libraries:**
-   - Music Videos: `/data/music-videos`
-   - Audio Music: `/data/music-audio`
-4. **Configure Live TV:**
-   - Go to Settings → Live TV & DVR
-   - Enable Live TV & DVR
-   - Add ErsatzTV as source
+5. Initialize MinIO buckets (first run):
+```bash
+# Buckets are auto-created on first API call
+# Or manually via MinIO console at http://localhost:9000
+```
 
-## 📱 How to Watch
+## Project Structure
 
-### ErsatzTV Streams
-- **RTSP:** `rtsp://your-domain:8554/live`
-- **Via Plex:** Add as Live TV source
+```
+valx-originals/
+├── functions/          # Bun + Hono.js API
+│   ├── auth/         # Authentication endpoints
+│   ├── user/         # User management
+│   ├── media/        # Media operations
+│   ├── fm/           # FM/Podcast endpoints
+│   ├── tv/           # TV/M3U endpoints
+│   ├── courses/      # Course endpoints
+│   ├── utils/        # Shared utilities
+│   └── gateway.js    # Main router
+├── web/
+│   ├── valx-player/  # React web player
+│   └── valx-admin/   # React admin panel
+├── app/              # Expo mobile app (future)
+├── config/           # Configuration files
+└── deploy/           # Deployment configs
+```
 
-### Plex Access
-- **Web:** `http://your-domain:32400/web`
-- **Mobile Apps:** Download Plex app
-- **Smart TV:** Install Plex app
-- **Gaming Consoles:** Install Plex app
+## API Endpoints
 
-## 🎯 Use Cases
+### Authentication
+- `POST /auth/register` - Register new user
+- `POST /auth/login` - Login and get JWT token
+- `GET /auth/me` - Get current user info
 
-### Professional Broadcasting
-- Use ErsatzTV for multiple channels
-- Create program schedules
-- Add commercial breaks
-- Generate EPG
+### Media
+- `POST /media/upload` - Upload media (admin only)
+- `GET /media/list?type=movie` - List media
+- `GET /media/stream/:id` - Get HLS stream URL
+- `GET /media/metadata/:id` - Get media metadata
 
-### Family Sharing
-- Use Plex for easy sharing
-- Create user accounts
-- Access from mobile apps
-- Remote streaming
+### User
+- `GET /user/profile` - Get user profile
+- `POST /user/profile` - Update profile
+- `GET /user/subscription` - Get subscription status
+- `POST /user/subscription` - Change subscription
 
-### Combined Approach
-- ErsatzTV creates professional channels
-- Plex provides user-friendly access
-- Best of both worlds
+### FM/TV
+- `GET /fm/list` - List FM channels
+- `GET /tv/list` - Get M3U playlist
 
-## 🔒 Security
+### Courses
+- `GET /courses/list` - List courses
+- `GET /courses/:id` - Get course details
 
-- **Plex:** Built-in user authentication
-- **ErsatzTV:** Admin account protection
-- **Coolify:** SSL/TLS support
-- **Network:** Internal Docker networking
+## MinIO Bucket Structure
 
-## 💰 Cost
+- `/users/` - User profiles (JSON)
+- `/videos/` - Video media (HLS + metadata)
+- `/audio/` - Audio media (HLS + metadata)
+- `/fm/` - FM channel streams
+- `/tv/` - M3U playlists
+- `/courses/` - Course data and metadata
+- `/subscriptions/` - Subscription plans (JSON)
+- `/thumbnails/` - Media thumbnails
 
-- **ErsatzTV:** Free
-- **Plex:** Free (Plex Pass optional)
-- **Coolify:** Your existing server
-- **Total:** $0 + server costs
+## User Roles
 
-## 🛠️ Troubleshooting
+| Role | Permissions |
+|------|-------------|
+| admin | Full access: upload, edit, delete, manage users |
+| user | View content, update own profile/subscription |
+| guest | Access only free content (FM, TV) |
 
-### AzuraCast "No Available Server" Error on Coolify
+## Subscription Plans
 
-If you see "No available server" when accessing `https://fm.val-x.com/`:
+Default plans (stored in `/subscriptions/plans.json`):
 
-1. **Wait for Container Initialization**
-   - AzuraCast takes 2-5 minutes to fully start
-   - Check Coolify logs to see initialization progress
-   - Look for "AzuraCast initialized" message
+- **Free**: FM, TV, free content
+- **Premium**: All content including movies and courses
 
-2. **Verify Coolify Proxy Configuration**
-   - Go to your project in Coolify
-   - Check domain configuration for `fm.val-x.com`
-   - **Target Port should be:** `8080` (internal container port)
-   - **NOT** `8081` (external host port)
-   - Protocol: `http` (not https for internal routing)
+## Deployment on Coolify
 
-3. **Check Container Health**
-   - In Coolify, view the AzuraCast container logs
-   - Ensure status shows "healthy"
-   - Look for database initialization messages
+1. Create new project in Coolify
+2. Connect Git repository
+3. Select "Docker Compose" deployment
+4. Use `deploy/coolify.yaml` configuration
+5. Set environment variables in Coolify
+6. Deploy!
 
-4. **Restart if Needed**
-   - Stop the AzuraCast service in Coolify
-   - Wait 30 seconds
-   - Start the service again
-   - Wait 5 minutes for full initialization
+## Environment Variables
 
-### Services Not Starting
-- Check Coolify logs
-- Verify environment variables
-- Ensure ports are accessible
+See `config/coolify.env.example` for all required variables:
 
-### Can't Access Services
-- Check Coolify proxy configuration
-- Verify domain settings
-- Check firewall rules
-- Ensure target port matches internal container port (8080 for AzuraCast)
+- `MINIO_ENDPOINT` - MinIO server URL
+- `MINIO_ACCESS_KEY` - MinIO access key
+- `MINIO_SECRET_KEY` - MinIO secret key
+- `JWT_SECRET` - Secret for JWT tokens
+- `PORT` - API server port (default: 8080)
 
-### Videos Not Playing
-- Verify video files are in `videos/` directory
-- Check file permissions
-- Ensure supported formats
+## Development
 
-## 📚 Supported Video Formats
+### Backend API
+```bash
+cd functions
+bun run dev
+```
 
-- **MP4** (recommended)
-- **MKV**
-- **AVI**
-- **MOV**
-- **WMV**
+### Web Player
+```bash
+cd web/valx-player
+npm run dev
+```
 
-## ⚖️ Legal Notice
+### Admin Panel
+```bash
+cd web/valx-admin
+npm run dev
+```
 
-⚠️ **Important:** Only stream content you have rights to distribute.
+## Production Deployment
 
-Consider using:
-- Creative Commons music videos
-- Royalty-free content
-- Your own recordings
-- Content with proper licenses
+**⚠️ IMPORTANT**: Before deploying to production, review the [PRODUCTION.md](PRODUCTION.md) guide for:
+- Security checklist
+- Credential management
+- HTTPS/SSL configuration
+- Backup strategies
+- Performance optimization
+- Monitoring setup
 
-## 🎉 Enjoy Your Music TV Station!
+Quick production checklist:
+1. **Change default credentials** in environment variables
+2. **Use strong JWT_SECRET** (generate with `openssl rand -base64 32`)
+3. **Enable HTTPS** via Coolify reverse proxy
+4. **Set up backups** for MinIO data directory
+5. **Configure FFmpeg** for hardware acceleration if available
+6. **Monitor disk space** - HLS transcoding creates multiple files
 
-Deploy to Coolify and start streaming your music video collection 24/7! 🎵📺
+## Roadmap
 
----
+- [x] Backend API (Bun + Hono.js)
+- [x] Web player (React)
+- [x] Admin panel (React)
+- [ ] Mobile app (Expo)
+- [ ] CDN integration (Bunny/Cloudflare)
+- [ ] Payment integration (Razorpay)
+- [ ] GPU encoding node
+- [ ] Backup MinIO node
 
-**Happy Streaming!** 🚀
+## License
+
+This project is self-hosted and free to use.
+
+## Documentation
+
+- [README.md](README.md) - This file, overview and quick start
+- [DEPLOYMENT.md](DEPLOYMENT.md) - Detailed deployment guide for Coolify
+- [PRODUCTION.md](PRODUCTION.md) - Production security and best practices
+- [IMPLEMENTATION-SUMMARY.md](IMPLEMENTATION-SUMMARY.md) - Implementation details
+
+## Support
+
+For issues and questions, please refer to the documentation or create an issue in the repository.

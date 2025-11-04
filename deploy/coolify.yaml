@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  # Val-X API (Bun + Hono.js)
+  valx-api:
+    build:
+      context: ./functions
+      dockerfile: Dockerfile
+    container_name: valx-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - MINIO_ENDPOINT=http://minio:9000
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY:-valxadmin}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY:-valxsecret}
+      - JWT_SECRET=${JWT_SECRET:-supersecretkey}
+      - PORT=8080
+    depends_on:
+      - minio
+    networks:
+      - valx-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - traefik.http.services.valx-api.loadbalancer.server.port=8080
+
+  # MinIO Object Storage
+  minio:
+    image: minio/minio:latest
+    container_name: valx-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"  # Console
+      - "9001:9001"  # API
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY:-valxadmin}
+      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY:-valxsecret}
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9000"
+    networks:
+      - valx-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - traefik.http.services.minio.loadbalancer.server.port=9000
+
+  # Jellyfin Media Server (for playback integration)
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: valx-jellyfin
+    restart: unless-stopped
+    ports:
+      - "8096:8096"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+      - JELLYFIN_PublishedServerUrl=${JELLYFIN_URL:-http://localhost:8096}
+    volumes:
+      - jellyfin-config:/config
+      - jellyfin-cache:/cache
+      - jellyfin-transcode:/transcode
+    networks:
+      - valx-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8096"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    labels:
+      - traefik.http.services.jellyfin.loadbalancer.server.port=8096
+
+volumes:
+  minio-data:
+    driver: local
+  jellyfin-config:
+    driver: local
+  jellyfin-cache:
+    driver: local
+  jellyfin-transcode:
+    driver: local
+
+networks:
+  valx-network:
+    driver: bridge
+

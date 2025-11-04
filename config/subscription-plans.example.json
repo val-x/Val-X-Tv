@@ -1,0 +1,27 @@
+{
+  "free": {
+    "id": "free",
+    "name": "Free",
+    "price": 0,
+    "features": [
+      "FM Radio",
+      "TV Channels",
+      "Free Content",
+      "Basic Streaming"
+    ]
+  },
+  "premium": {
+    "id": "premium",
+    "name": "Premium",
+    "price": 499,
+    "features": [
+      "All Movies",
+      "All TV Shows",
+      "Premium Courses",
+      "Ad-free Experience",
+      "HD Quality (720p)",
+      "Priority Support"
+    ]
+  }
+}
+

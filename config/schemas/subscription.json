@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "price": {
+        "type": "number",
+        "description": "Price in cents"
+      },
+      "features": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": ["id", "name", "price", "features"]
+  },
+  "example": {
+    "free": {
+      "id": "free",
+      "name": "Free",
+      "price": 0,
+      "features": ["FM", "TV", "Free content"]
+    },
+    "premium": {
+      "id": "premium",
+      "name": "Premium",
+      "price": 499,
+      "features": ["Movies", "Courses", "Ad-free"]
+    }
+  }
+}
+

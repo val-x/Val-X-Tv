@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique user ID"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "User email address"
+    },
+    "passwordHash": {
+      "type": "string",
+      "description": "SHA256 hash of password"
+    },
+    "role": {
+      "type": "string",
+      "enum": ["admin", "user", "guest"],
+      "description": "User role"
+    },
+    "subscription": {
+      "type": "string",
+      "enum": ["free", "premium"],
+      "description": "Subscription plan"
+    },
+    "createdAt": {
+      "type": "number",
+      "description": "Unix timestamp of account creation"
+    },
+    "profile": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    }
+  },
+  "required": ["id", "email", "passwordHash", "role", "subscription", "createdAt"]
+}
+
