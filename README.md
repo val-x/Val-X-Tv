@@ -238,6 +238,8 @@ This project is self-hosted and free to use.
 
 - [README.md](README.md) - This file, overview and quick start
 - [DEPLOYMENT.md](DEPLOYMENT.md) - Detailed deployment guide for Coolify
+- [COOLIFY-SETUP.md](COOLIFY-SETUP.md) - Coolify-specific configuration and setup
+- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Comprehensive troubleshooting guide
 - [PRODUCTION.md](PRODUCTION.md) - Production security and best practices
 - [IMPLEMENTATION-SUMMARY.md](IMPLEMENTATION-SUMMARY.md) - Implementation details
 
