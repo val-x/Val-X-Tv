@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  valx-api:
+    build:
+      context: ./functions
+      dockerfile: Dockerfile
+    container_name: valx-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - MINIO_ENDPOINT=http://minio:9000
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY:-valxadmin}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY:-valxsecret}
+      - JWT_SECRET=${JWT_SECRET:-supersecretkey}
+      - PORT=8080
+      - MAX_UPLOAD_SIZE=${MAX_UPLOAD_SIZE:-10737418240}
+      - RATE_LIMIT_WINDOW=${RATE_LIMIT_WINDOW:-60000}
+      - RATE_LIMIT_MAX=${RATE_LIMIT_MAX:-100}
+      - CORS_ORIGIN=${CORS_ORIGIN:-https://*.val-x.com,https://val-x.com}
+    depends_on:
+      - minio
+    networks:
+      - valx-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - traefik.http.services.valx-api.loadbalancer.server.port=8080
+
+  minio:
+    image: minio/minio:latest
+    container_name: valx-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY:-valxadmin}
+      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY:-valxsecret}
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9000"
+    networks:
+      - valx-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - traefik.http.services.minio.loadbalancer.server.port=9000
+
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: valx-jellyfin
+    restart: unless-stopped
+    ports:
+      - "8096:8096"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+      - JELLYFIN_PublishedServerUrl=${JELLYFIN_URL:-http://localhost:8096}
+    volumes:
+      - jellyfin-config:/config
+      - jellyfin-cache:/cache
+      - jellyfin-transcode:/transcode
+    networks:
+      - valx-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8096"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    labels:
+      - traefik.http.services.jellyfin.loadbalancer.server.port=8096
+
+volumes:
+  minio-data:
+    driver: local
+  jellyfin-config:
+    driver: local
+  jellyfin-cache:
+    driver: local
+  jellyfin-transcode:
+    driver: local
+
+networks:
+  valx-network:
+    driver: bridge
+

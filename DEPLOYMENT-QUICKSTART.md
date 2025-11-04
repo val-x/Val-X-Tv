@@ -18,7 +18,7 @@ docker-compose -f docker-compose.web.yml up -d
 1. **Create project** in Coolify: "valx-originals"
 2. **Connect Git repository**
 3. **Select deployment type**: Docker Compose
-4. **Compose file**: `deploy/docker-compose.yml`
+4. **Compose file**: `docker-compose.yml` (root level - automatically detected)
 5. **Set environment variables** (see `config/coolify.env.example`)
 
 ### Required Environment Variables

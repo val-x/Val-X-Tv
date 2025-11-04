@@ -19,8 +19,10 @@
 ### Step 3: Configure Deployment Type
 
 1. **Deployment Type**: Select "Docker Compose"
-2. **Compose File**: Use `deploy/docker-compose.yml`
-3. **Build Context**: Set to repository root
+2. **Compose File**: Use `docker-compose.yml` (root level)
+   - Coolify will automatically find `docker-compose.yml` at the repository root
+   - The file is already configured with correct paths for root-level builds
+3. **Build Context**: Set to repository root (default)
 
 ### Step 4: Environment Variables
 
