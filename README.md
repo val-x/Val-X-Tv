@@ -138,8 +138,8 @@ Val-X-Originals/
 - `/users/` - User profiles (JSON)
 - `/videos/` - Video media (HLS + metadata)
 - `/audio/` - Audio media (HLS + metadata)
-- `/fm/` - FM channel streams
-- `/tv/` - M3U playlists
+- `/fm-radio/` - FM channel streams (renamed from `fm` - MinIO requires 3+ char bucket names)
+- `/tv-shows/` - M3U playlists (renamed from `tv` - MinIO requires 3+ char bucket names)
 - `/courses/` - Course data and metadata
 - `/subscriptions/` - Subscription plans (JSON)
 - `/thumbnails/` - Media thumbnails

@@ -60,7 +60,7 @@ Restrict access to:
 
 1. **Access MinIO Console**: `https://minio.val-x.com` (using `*.val-x.com` base URL)
 2. **Set bucket policies**:
-   - Public read for `/fm/` and `/tv/` only
+   - Public read for `/fm-radio/` and `/tv-shows/` only
    - Signed URLs for all other content
    - Disable anonymous access on sensitive buckets
 3. **Create IAM policies** for service accounts if needed

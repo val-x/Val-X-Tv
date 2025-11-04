@@ -79,7 +79,7 @@ After first deployment:
 1. Access MinIO Console: `https://minio.val-x.com`
 2. Login with your `MINIO_ACCESS_KEY` and `MINIO_SECRET_KEY`
 3. Buckets should auto-create on first API call
-4. Verify buckets: `users`, `videos`, `audio`, `fm`, `tv`, `courses`, `subscriptions`, `thumbnails`
+4. Verify buckets: `users`, `videos`, `audio`, `fm-radio`, `tv-shows`, `courses`, `subscriptions`, `thumbnails`
 
 ### Step 8: Create Admin User
 
