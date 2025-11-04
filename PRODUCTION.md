@@ -36,7 +36,9 @@ PORT=8080
 ```env
 JWT_EXPIRES_IN=7d
 FFMPEG_PATH=ffmpeg
-JELLYFIN_URL=http://localhost:8096
+# IMPORTANT: Set to your public HTTPS URL (e.g., https://play.val-x.com)
+# This prevents "Server Mismatch" errors in Jellyfin
+JELLYFIN_URL=https://play.val-x.com
 ```
 
 ### 3. HTTPS/SSL Configuration
