@@ -25,9 +25,34 @@ initBuckets().catch(console.error);
 // Response compression
 app.use('*', compress());
 
-// CORS middleware
+// CORS middleware with wildcard subdomain support
+const corsOrigins = process.env.CORS_ORIGIN 
+  ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
+  : ['*'];
+
 app.use('*', cors({
-  origin: process.env.CORS_ORIGIN || '*',
+  origin: (origin) => {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return true;
+    
+    // If wildcard is configured, allow all
+    if (corsOrigins.includes('*')) return true;
+    
+    // Check exact match
+    if (corsOrigins.includes(origin)) return true;
+    
+    // Check wildcard subdomain pattern (e.g., *.val-x.com)
+    for (const pattern of corsOrigins) {
+      if (pattern.includes('*.')) {
+        const domain = pattern.replace('https://', '').replace('http://', '').replace('*.', '');
+        if (origin.endsWith('.' + domain) || origin === `https://${domain}` || origin === `http://${domain}`) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  },
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization'],
   credentials: true,

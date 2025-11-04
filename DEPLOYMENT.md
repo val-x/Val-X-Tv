@@ -41,13 +41,17 @@ JELLYFIN_URL=http://localhost:8096
 
 ### Step 5: Configure Domains
 
+**Base URL**: All services use `*.val-x.com` pattern
+
 In Coolify, add domains for each service:
 
 1. **API**: `api.val-x.com` → Port 8080
 2. **MinIO Console**: `minio.val-x.com` → Port 9000
 3. **Jellyfin**: `play.val-x.com` → Port 8096
-4. **Web Player**: `val-x.com` → Static hosting (deploy separately)
-5. **Admin Panel**: `admin.val-x.com` → Static hosting (deploy separately)
+4. **Web Player**: `val-x.com` or `www.val-x.com` → Port 3000 (or static hosting)
+5. **Admin Panel**: `admin.val-x.com` → Port 3001 (or static hosting)
+
+**Important**: Set `CORS_ORIGIN` to `https://*.val-x.com,https://val-x.com` in environment variables to allow all subdomains.
 
 ### Step 6: Deploy
 
@@ -121,6 +125,7 @@ For web player and admin panel, you have two options:
      ```
      VITE_API_URL=https://api.val-x.com
      ```
+   - Or set in Coolify environment variables when using Docker
    - Rebuild after setting environment variables
 
 ## Local Development Setup

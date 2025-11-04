@@ -161,12 +161,15 @@ Default plans (stored in `/subscriptions/plans.json`):
 
 ## Deployment on Coolify
 
+**Base URL**: All services use `*.val-x.com` pattern
+
 1. Create new project in Coolify
 2. Connect Git repository
 3. Select "Docker Compose" deployment
 4. Use `deploy/coolify.yaml` configuration
-5. Set environment variables in Coolify
-6. Deploy!
+5. Set environment variables in Coolify (see `config/coolify.env.example`)
+6. Configure domains: `api.val-x.com`, `minio.val-x.com`, `play.val-x.com`, etc.
+7. Deploy!
 
 ## Environment Variables
 

@@ -56,7 +56,7 @@ Restrict access to:
 
 ### 5. MinIO Security
 
-1. **Access MinIO Console**: `https://minio.val-x.com`
+1. **Access MinIO Console**: `https://minio.val-x.com` (using `*.val-x.com` base URL)
 2. **Set bucket policies**:
    - Public read for `/fm/` and `/tv/` only
    - Signed URLs for all other content
@@ -195,8 +195,8 @@ docker exec valx-minio mc mirror /data/users /backup/users
 
 For issues, check:
 1. Container logs: `docker logs <container-name>`
-2. API health: `curl https://api.val-x.com/health`
-3. MinIO console: `https://minio.val-x.com`
+2. API health: `curl https://api.val-x.com/health` (using `*.val-x.com` base URL)
+3. MinIO console: `https://minio.val-x.com` (using `*.val-x.com` base URL)
 4. Disk space: `df -h`
 5. Resource usage: `docker stats`
 

@@ -11,7 +11,7 @@ services:
     ports:
       - "3000:80"
     environment:
-      - VITE_API_URL=${VITE_API_URL:-http://api.val-x.com}
+      - VITE_API_URL=${VITE_API_URL:-https://api.val-x.com}
     networks:
       - valx-network
     healthcheck:
@@ -33,7 +33,7 @@ services:
     ports:
       - "3001:80"
     environment:
-      - VITE_API_URL=${VITE_API_URL:-http://api.val-x.com}
+      - VITE_API_URL=${VITE_API_URL:-https://api.val-x.com}
     networks:
       - valx-network
     healthcheck:
