@@ -35,12 +35,13 @@ MINIO_ACCESS_KEY=valxadmin
 MINIO_SECRET_KEY=valxsecret
 JWT_SECRET=your-secret-key-here
 PORT=8080
-JELLYFIN_URL=http://localhost:8096
+JELLYFIN_URL=https://play.val-x.com
 ```
 
 **Important**: 
 - Change `JWT_SECRET` to a strong random string (use `openssl rand -base64 32`)
 - Change `MINIO_ACCESS_KEY` and `MINIO_SECRET_KEY` for security
+- **Set `JELLYFIN_URL` to your public HTTPS URL** (e.g., `https://play.val-x.com`) to prevent "Server Mismatch" errors in Jellyfin. This must match the domain where users access Jellyfin.
 
 ### Step 5: Configure Domains
 
@@ -218,6 +219,30 @@ For web player and admin panel, you have two options:
 - Verify FFmpeg is installed and accessible
 - Check `/tmp` directory has write permissions
 - Review API logs for detailed errors
+
+### Jellyfin "Server Mismatch" Error
+
+If you see a "Server Mismatch" error when accessing `https://play.val-x.com`:
+
+1. **Check the `JELLYFIN_URL` environment variable** in Coolify:
+   - It should be set to `https://play.val-x.com` (your public HTTPS URL)
+   - NOT `http://localhost:8096` (this causes the mismatch)
+
+2. **Update the environment variable**:
+   - Go to Coolify → Your Application → Environment Variables
+   - Set `JELLYFIN_URL` to `https://play.val-x.com`
+   - Save and redeploy the Jellyfin service
+
+3. **Restart the Jellyfin container**:
+   ```bash
+   docker restart valx-jellyfin
+   ```
+
+4. **Clear browser cache** if the error persists:
+   - The error is also cached in the browser
+   - Try in incognito/private mode or clear browser storage for the domain
+
+The error occurs because Jellyfin detects that the URL you're accessing from doesn't match the configured `JELLYFIN_PublishedServerUrl`, which is a security feature to prevent man-in-the-middle attacks.
 
 ## Production Checklist
 
