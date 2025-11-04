@@ -7,8 +7,10 @@ services:
       dockerfile: Dockerfile
     container_name: valx-api
     restart: unless-stopped
-    ports:
-      - "8080:8080"
+    # Ports removed - Coolify/Traefik handles routing via Docker network
+    # Internal port 8080 is still used by the container
+    expose:
+      - "8080"
     environment:
       - MINIO_ENDPOINT=http://minio:9000
       - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY:-valxadmin}
@@ -44,9 +46,11 @@ services:
     image: minio/minio:latest
     container_name: valx-minio
     restart: unless-stopped
-    ports:
-      - "9000:9000"
-      - "9001:9001"
+    # Ports removed - Coolify/Traefik handles routing via Docker network
+    # Internal ports 9000 (console) and 9001 (API) are still used by the container
+    expose:
+      - "9000"
+      - "9001"
     environment:
       - MINIO_ROOT_USER=${MINIO_ACCESS_KEY:-valxadmin}
       - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY:-valxsecret}
@@ -76,8 +80,10 @@ services:
     image: lscr.io/linuxserver/jellyfin:latest
     container_name: valx-jellyfin
     restart: unless-stopped
-    ports:
-      - "8096:8096"
+    # Ports removed - Coolify/Traefik handles routing via Docker network
+    # Internal port 8096 is still used by the container
+    expose:
+      - "8096"
     environment:
       - PUID=1000
       - PGID=1000
