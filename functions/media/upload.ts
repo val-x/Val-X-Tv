@@ -4,6 +4,7 @@ import { buckets, uploadFile } from '../utils/minio';
 import { saveMetadata, MediaMetadata } from '../utils/metadata';
 import { transcodeVideo, transcodeAudio, extractThumbnail, getDuration } from '../utils/ffmpeg';
 import { requireAdmin } from '../utils/middleware';
+import { uploadRateLimitMiddleware } from '../utils/rateLimit';
 import { writeFile, mkdir, rm } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
@@ -12,6 +13,11 @@ import { readdir, stat } from 'fs/promises';
 export const uploadRouter = new Hono();
 
 uploadRouter.use('*', requireAdmin);
+uploadRouter.use('*', uploadRateLimitMiddleware);
+
+const MAX_UPLOAD_SIZE = parseInt(process.env.MAX_UPLOAD_SIZE || '10737418240'); // 10GB default
+const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/mpeg', 'video/quicktime', 'video/x-msvideo', 'video/webm'];
+const ALLOWED_AUDIO_TYPES = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/webm', 'audio/aac'];
 
 uploadRouter.post('/upload', async (c) => {
   try {
@@ -24,6 +30,37 @@ uploadRouter.post('/upload', async (c) => {
     
     if (!file) {
       return c.json({ error: 'No file provided' }, 400);
+    }
+    
+    // File size validation
+    if (file.size > MAX_UPLOAD_SIZE) {
+      return c.json({ 
+        error: 'File too large', 
+        message: `Maximum file size is ${MAX_UPLOAD_SIZE / 1073741824}GB` 
+      }, 413);
+    }
+    
+    // File type validation
+    const isVideo = file.type.startsWith('video/');
+    const isAudio = file.type.startsWith('audio/');
+    
+    if (!isVideo && !isAudio) {
+      return c.json({ error: 'Invalid file type', message: 'Only video and audio files are allowed' }, 400);
+    }
+    
+    // Additional type validation
+    if (isVideo && !ALLOWED_VIDEO_TYPES.includes(file.type)) {
+      return c.json({ 
+        error: 'Unsupported video format', 
+        message: `Supported formats: ${ALLOWED_VIDEO_TYPES.join(', ')}` 
+      }, 400);
+    }
+    
+    if (isAudio && !ALLOWED_AUDIO_TYPES.includes(file.type)) {
+      return c.json({ 
+        error: 'Unsupported audio format', 
+        message: `Supported formats: ${ALLOWED_AUDIO_TYPES.join(', ')}` 
+      }, 400);
     }
     
     // Generate unique ID

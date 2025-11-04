@@ -1,0 +1,10 @@
+# Val-X Originals Backup Cron Schedule
+# Add to crontab with: crontab -e
+# This example runs daily backups at 2 AM
+
+# Daily backup at 2 AM
+0 2 * * * cd /path/to/valx-originals && /bin/bash scripts/backup.sh >> logs/backup.log 2>&1
+
+# Weekly cleanup of old backups (Sundays at 3 AM)
+0 3 * * 0 cd /path/to/valx-originals && find backups -name "*.tar.gz" -mtime +30 -delete
+

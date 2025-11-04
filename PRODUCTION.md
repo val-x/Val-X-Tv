@@ -206,12 +206,15 @@ For issues, check:
 - [ ] HTTPS enabled on all domains
 - [ ] Firewall rules configured
 - [ ] MinIO bucket policies set
-- [ ] Backups configured and tested
-- [ ] Resource limits set
-- [ ] Monitoring enabled
+- [ ] Backups configured and tested (see `scripts/backup.sh`)
+- [ ] Resource limits set (configured in `deploy/docker-compose.yml`)
+- [ ] Monitoring enabled (health endpoint at `/health`)
 - [ ] First admin user created
-- [ ] Content validation enabled
-- [ ] Rate limiting configured
+- [ ] Content validation enabled (file size/type limits configured)
+- [ ] Rate limiting configured (100 req/min default, 5 uploads/10min)
+- [ ] Response compression enabled
 - [ ] Logging configured
 - [ ] Documentation reviewed
+- [ ] Environment variables set in Coolify
+- [ ] Backup cron job scheduled (see `scripts/crontab.example`)
 

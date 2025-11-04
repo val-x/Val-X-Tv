@@ -1,6 +1,8 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { compress } from 'hono/compress';
 import { initBuckets } from './utils/minio.js';
+import { rateLimitMiddleware, uploadRateLimitMiddleware } from './utils/rateLimit.js';
 import { registerRouter } from './auth/register.js';
 import { loginRouter } from './auth/login.js';
 import { meRouter } from './auth/me.js';
@@ -20,16 +22,33 @@ const app = new Hono();
 // Initialize MinIO buckets on startup
 initBuckets().catch(console.error);
 
+// Response compression
+app.use('*', compress());
+
 // CORS middleware
 app.use('*', cors({
-  origin: '*',
+  origin: process.env.CORS_ORIGIN || '*',
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 }));
 
-// Health check
+// Global rate limiting
+app.use('*', rateLimitMiddleware);
+
+// Enhanced health check
 app.get('/health', (c) => {
-  return c.json({ status: 'ok', timestamp: Date.now() });
+  return c.json({ 
+    status: 'ok', 
+    timestamp: Date.now(),
+    uptime: process.uptime(),
+    memory: {
+      used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+      total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
+      limit: Math.round(process.memoryUsage().rss / 1024 / 1024),
+    },
+    version: '1.0.0'
+  });
 });
 
 // Auth routes
