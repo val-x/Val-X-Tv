@@ -1,7 +1,7 @@
 FROM oven/bun:latest
 
-# Install FFmpeg for transcoding
-RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
+# Install FFmpeg for transcoding and curl for health checks
+RUN apt-get update && apt-get install -y ffmpeg curl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
