@@ -56,7 +56,7 @@ services:
       - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY:-valxsecret}
     volumes:
       - minio-data:/data
-    command: server /data --console-address ":9000"
+    command: server /data --address ":9000" --console-address ":9001"
     networks:
       - valx-network
     deploy:
