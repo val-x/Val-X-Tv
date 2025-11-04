@@ -80,20 +80,48 @@ curl -X POST https://api.val-x.com/auth/register \
 
 ### Step 9: Deploy Web Apps
 
-For web player and admin panel:
+For web player and admin panel, you have two options:
+
+#### Option A: Docker Compose (Recommended)
+
+1. **Use the provided docker-compose file**:
+   ```bash
+   cd deploy
+   docker-compose -f docker-compose.web.yml up -d
+   ```
+
+2. **Configure domains in Coolify**:
+   - `val-x.com` → Port 3000 (Player)
+   - `admin.val-x.com` → Port 3001 (Admin)
+
+#### Option B: Static Site Hosting
 
 1. **Build static files**:
    ```bash
+   # Use the build script
+   bash scripts/build-web.sh
+   
+   # Or manually:
    cd web/valx-player
+   npm install
    npm run build
    
    cd ../valx-admin
+   npm install
    npm run build
    ```
 
 2. **Deploy to Coolify** as static sites:
-   - Upload `dist/` folder to static hosting
+   - Upload `web/valx-player/dist/` folder to static hosting
+   - Upload `web/valx-admin/dist/` folder to static hosting
    - Or configure CI/CD to build and deploy automatically
+
+3. **Set environment variables**:
+   - Create `.env` files in each web app directory:
+     ```
+     VITE_API_URL=https://api.val-x.com
+     ```
+   - Rebuild after setting environment variables
 
 ## Local Development Setup
 

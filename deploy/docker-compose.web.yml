@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # Val-X Web Player
+  valx-player:
+    build:
+      context: ../web/valx-player
+      dockerfile: Dockerfile
+    container_name: valx-player
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://api.val-x.com}
+    networks:
+      - valx-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    labels:
+      - traefik.http.services.valx-player.loadbalancer.server.port=80
+
+  # Val-X Admin Panel
+  valx-admin:
+    build:
+      context: ../web/valx-admin
+      dockerfile: Dockerfile
+    container_name: valx-admin
+    restart: unless-stopped
+    ports:
+      - "3001:80"
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://api.val-x.com}
+    networks:
+      - valx-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    labels:
+      - traefik.http.services.valx-admin.loadbalancer.server.port=80
+
+networks:
+  valx-network:
+    external: true
+    name: valx-originals_valx-network
+
