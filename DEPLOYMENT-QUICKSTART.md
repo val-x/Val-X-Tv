@@ -15,7 +15,7 @@ docker-compose -f docker-compose.web.yml up -d
 
 ### Initial Setup
 
-1. **Create project** in Coolify: "valx-originals"
+1. **Create project** in Coolify: "Val-X Originals"
 2. **Connect Git repository**
 3. **Select deployment type**: Docker Compose
 4. **Compose file**: `docker-compose.yml` (root level - automatically detected)

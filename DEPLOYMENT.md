@@ -11,7 +11,7 @@
 ### Step 2: Setup Coolify
 
 1. **Access Coolify Dashboard**
-2. **Create New Project**: "valx-originals"
+2. **Create New Project**: "Val-X Originals"
 3. **Add Application**: Choose "Git Repository"
 4. **Connect Repository**: Enter your Git URL
 5. **Select Branch**: `main` or `master`
@@ -145,7 +145,7 @@ For web player and admin panel, you have two options:
 1. **Clone repository**:
    ```bash
    git clone <repository-url>
-   cd valx-originals
+   cd Val-X-Originals
    ```
 
 2. **Install dependencies**:

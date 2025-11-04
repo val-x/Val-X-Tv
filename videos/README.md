@@ -1,4 +1,4 @@
-# Val-X TV - Music Videos
+# Val-X Originals - Music Videos
 
 Place your music video files in this directory for Val-X TV.
 

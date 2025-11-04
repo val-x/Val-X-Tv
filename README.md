@@ -57,7 +57,7 @@ A lightweight, full-featured, self-hosted media platform for movies, TV, FM, mus
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd valx-originals
+cd Val-X-Originals
 ```
 
 2. Install dependencies:
@@ -88,7 +88,7 @@ docker-compose up -d
 ## Project Structure
 
 ```
-valx-originals/
+Val-X-Originals/
 ├── functions/          # Bun + Hono.js API
 │   ├── auth/         # Authentication endpoints
 │   ├── user/         # User management

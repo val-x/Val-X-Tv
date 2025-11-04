@@ -68,7 +68,7 @@ All components of the Val-X Originals platform have been successfully implemente
 ### Project Structure ✅
 
 ```
-valx-originals/
+Val-X-Originals/
 ├── functions/              ✅ Complete
 │   ├── auth/              ✅ 3 endpoints
 │   ├── user/              ✅ 2 endpoints
