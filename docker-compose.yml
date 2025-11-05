@@ -34,9 +34,9 @@ services:
           cpus: '1'
           memory: 2G
     healthcheck:
-      # Alternative health check using Bun's fetch (works without curl)
-      # If curl is available, use: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      test: ["CMD-SHELL", "bun -e \"fetch('http://localhost:8080/health').then(r=>r.ok?process.exit(0):process.exit(1)).catch(()=>process.exit(1))\" || curl -f http://localhost:8080/health"]
+      # Health check using Node.js (available in Bun container)
+      # Checks /health endpoint and expects 200 status code
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:8080/health',(r)=>{r.resume();process.exit(r.statusCode===200?0:1)}).on('error',()=>process.exit(1))\" || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
